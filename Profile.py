@@ -14,7 +14,7 @@
 '''
 
 import re
-from urllib import request
+from urllib2 import urlopen
 
 
 # Base class for working with profiles
@@ -22,7 +22,7 @@ from urllib import request
 class Profile(object):
     # Method for obtaining numeric id of a specified profile (url)
     @staticmethod
-    def getId(profileurl: str = 'https://www.fb.com/rique.dev'):
+    def getId(profileurl):
 
         # Let's split the URL into smaller parts to validate (since mobile links do not work with the preg below)
         parts = profileurl.split('.', 1)
@@ -48,13 +48,13 @@ class Profile(object):
                   ' content=\"fb://page/(.*?)\?)|((meta property=\"al:ios:url\") ' \
                   'content=\"fb://page/\?id=(.*?)\")'
 
-        with request.urlopen(str(profileurl)) as response:
+        response =  urlopen(str(profileurl))
 
-            for item in re.findall(str.encode(pattern), response.read()):
+        for item in re.findall(str.encode(pattern), response.read()):
 
-                for sub_item in item:
+            for sub_item in item:
 
-                    if sub_item.decode().isdigit():
-                        valid_items.append(sub_item.decode())
+                if sub_item.decode().isdigit():
+                    valid_items.append(sub_item.decode())
 
-            return valid_items
+        return valid_items
